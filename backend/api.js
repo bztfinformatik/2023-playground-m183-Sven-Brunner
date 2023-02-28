@@ -21,8 +21,40 @@ const { STATIC_DIR } = require("./util/const");
 const api = express();
 
 
+
+
 // initialize body-parser for JSON-format
 api.use(express.json());
+
+const data = require('./assets/sampledata.json');
+const db = require("./models/main.js");
+db.sequelize.sync()
+  .then(() => {
+    db.Vote.destroy({
+      where: {}
+    });
+    db.Post.destroy({
+      where: {}
+    });
+    db.User.destroy({
+      where: {}
+    });
+
+ 
+    db.User.bulkCreate(data.users).then(() => {
+      console.log('User imported');
+    });
+    db.Post.bulkCreate(data.postings).then(() => {
+      console.log('Postings imported');
+    });
+    db.Vote.bulkCreate(data.votes).then(() => {
+      console.log('Votes imported');
+    });
+  })
+  .catch((err) => {
+    console.log("Failed to sync db: " + err.message);
+  });
+
 
 // Setting response header to allow cross origin requests
 // CORS-Settings.
@@ -53,6 +85,7 @@ api.use((err, req, res, next) => {
     errorMessage: err.message,
   });
 });
+
 
 //
 // start server
