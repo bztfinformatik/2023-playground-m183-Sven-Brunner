@@ -1,0 +1,57 @@
+@startuml
+
+
+class schüler{
+    lehrbetrieb
+}
+class klasse{
+
+}
+class lektion{
+
+}
+class lehrer{
+    bankverbindung
+}
+
+
+class zeitabschnitt{
+jahr
+kw
+wochentag
+start
+ende
+}
+class raum{
+
+}
+
+class person {
+    vorname 
+    nachname
+    plz
+}
+
+schüler --|> person
+
+
+
+
+lehrer --|> person
+
+
+
+lektion }|--|| lehrer
+
+lektion }o--|{ raum
+
+lektion }o--|{ zeitabschnitt
+
+
+
+schüler --> TERNARY  : "*" 
+klasse --> TERNARY  : "*" 
+lektion --> TERNARY : "1" 
+
+
+@enduml

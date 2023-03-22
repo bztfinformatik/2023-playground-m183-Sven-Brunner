@@ -1,0 +1,60 @@
+@startuml 
+
+hide empty members
+
+class Saal {
+    id : int
+    name : string
+
+}
+
+class Sitzplatz{
+    id : int 
+    saalId : int
+    reihe : string 
+    sitz : int
+    preis : double
+}
+
+class Sitzplatzreservation{
+    id : int 
+    sitzplatzId : int 
+    vorstellungsId : int 
+    reservationsId : int 
+}
+class Zeitfenster {
+    id : int 
+    startzeit : DateTime 
+    endzeit : DateTime
+}
+
+class Film {
+    id : int 
+    name : string 
+    regisseur : string 
+}
+
+class Vorstellung{
+    id : int 
+    zeitfensterId : int 
+    saalId : int 
+    filmId : int 
+}
+
+class Reservation{
+    id : int 
+    name : string 
+    email : string 
+}
+
+
+Film ||---|{ Vorstellung
+Saal ||---|{ Vorstellung
+Zeitfenster ||---|{ Vorstellung
+Saal ||---|{ Sitzplatz 
+
+
+Reservation ||---|{ Sitzplatzreservation
+Sitzplatz ||---o{ Sitzplatzreservation
+Vorstellung ||---o{ Sitzplatzreservation
+@enduml

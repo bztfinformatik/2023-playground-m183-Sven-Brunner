@@ -1,7 +1,14 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('M183_CHAT', 'root', 'root', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+const { Sequelize } = require("sequelize");
 
-sequelize.sync();
+const db = new Sequelize(
+  process.env.NODE_DBSCHEMA,
+  process.env.NODE_DBUSER,
+  process.env.NODE_DBPWD,
+  {
+    dialect: process.env.NODE_DBDIALECT,
+    port: parseInt(process.env.NODE_DBPORT),
+    host: process.env.NODE_DBHOST,
+  }
+);
+
+module.exports = db;

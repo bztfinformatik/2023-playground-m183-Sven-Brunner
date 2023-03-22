@@ -1,58 +1,81 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('M183_CHAT', 'root', 'root', {
-    host: 'localhost',
-    dialect: 'mysql',
-  });
-
-  
-
-class Post extends Model {}
-Post.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  content: DataTypes.TEXT,
-  title: DataTypes.STRING,
-  parent_id: DataTypes.INTEGER,
-  author_id: DataTypes.INTEGER,
-  timestamp : DataTypes.TIME
-}, { sequelize, modelName: 'post' });
+const { Model, DataTypes } = require("sequelize");
+const db = require("../util/db");
 
 class User extends Model {}
-User.init({
-  id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
+User.init(
+  {
+    firstname: {
+      type: DataTypes.STRING,
+    },
+    lastname: {
+      type: DataTypes.STRING,
+    },
+    username: {
+      type: DataTypes.STRING,
+      unique: true,
+      allowNull: false,
+    },
+    pwd: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      get() {
+        return `${process.env.NODE_HOST}/${this.getDataValue("avatar")}`;
+      },
+    },
   },
-  firstname: DataTypes.STRING,
-  lastname: DataTypes.STRING,
-  pwd: DataTypes.STRING,
-  username: DataTypes.STRING,
-  avatar:DataTypes.STRING
-}, { sequelize, modelName: 'user' });
+  { sequelize: db, modelName: "user", freezeTableName: true }
+);
+
+class Posting extends Model {}
+Posting.init(
+  {
+    title: {
+      type: DataTypes.STRING,
+    },
+    content: {
+      type: DataTypes.STRING(4096),
+    },
+    timestamp: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+  },
+  { sequelize: db, modelName: "posting", freezeTableName: true }
+);
 
 class Vote extends Model {}
-Vote.init({
-  user_id: DataTypes.INTEGER,
-  posting_id: DataTypes.INTEGER,
-  isupvote : DataTypes.BOOLEAN
-}, { sequelize, modelName: 'vote' });
+Vote.init(
+  {
+    isupvote: {
+      type: DataTypes.BOOLEAN,
+    },
+  },
+  { sequelize: db, modelName: "vote", freezeTableName: true }
+);
 
-Post.belongsTo(User, { as: 'Author', foreignKey: 'user_id' });
-Vote.belongsTo(User, { as: 'Voter', foreignKey: 'user_id' });
-Vote.belongsTo(Post, { as: 'VotedPost', foreignKey: 'posting_id' });
-Post.hasMany(Post, { as: 'ChildPosts', foreignKey: 'parent_id' });
+// define model associations
+User.hasMany(Posting, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+  foreignKey: "authorId",
+});
 
-const db = {};
+Posting.belongsTo(User, { foreignKey: "authorId" });
 
-db.Sequelize = Sequelize;
-db.sequelize = sequelize;
-db.User = User;
-db.Post = Post;
-db.Vote = Vote;
+User.belongsToMany(Posting, { through: "vote" });
+Posting.belongsToMany(User, { through: "vote" });
 
+Posting.hasMany(Posting, {
+  onDelete: "CASCADE",
+  onUpdate: "CASCADE",
+  foreignKey: "parentId",
+});
 
-module.exports = db;
+module.exports = {
+  User,
+  Posting,
+  Vote,
+};
