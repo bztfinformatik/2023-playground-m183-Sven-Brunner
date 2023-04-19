@@ -3,20 +3,20 @@
 hide empty members
 
 class Saal {
-    id : int
+    * id : int
     name : string
 
 }
 
 class Sitzplatz{
-    id : int 
+    * id : int 
     saalId : int
-    reihe : string 
+    reihe : int 
     sitz : int
     preis : double
 }
 
-class Sitzplatzreservation{
+class Sitzplatzangebot{
     id : int 
     sitzplatzId : int 
     vorstellungsId : int 
@@ -54,7 +54,7 @@ Zeitfenster ||---|{ Vorstellung
 Saal ||---|{ Sitzplatz 
 
 
-Reservation ||---|{ Sitzplatzreservation
-Sitzplatz ||---o{ Sitzplatzreservation
-Vorstellung ||---o{ Sitzplatzreservation
+Reservation |o---|{ Sitzplatzangebot
+Sitzplatz ||---|| Sitzplatzangebot
+Vorstellung ||---|{ Sitzplatzangebot
 @enduml

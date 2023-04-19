@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 
 
 
-exports.PostNewUser = async (req,res,next) => {
+exports.SignUp = async (req,res,next) => {
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.pwd, salt);
@@ -31,7 +31,6 @@ exports.PostNewUser = async (req,res,next) => {
         
     }
     else{
-    // Hash the password using the salt
    
       let user =  await User.create({
         
@@ -49,5 +48,9 @@ exports.PostNewUser = async (req,res,next) => {
         "user": user,
       });
     }
+
+};
+
+exports.LogIn = async (req, res, next) =>{
 
 };
