@@ -62,30 +62,31 @@ exports.LogIn = async (req, res, next) =>{
     }
   );
   if(user === null){
-    res.status(404).json({
-      "errorMessage" : "Username not found"
-    });;
+    res.status(404).json({ message: 'User not found'});
+  }
+  else{
+    let isAuthorized = await bcrypt.compare(req.body.pwd, user.pwd);
+    if(!isAuthorized){
+      res.status(401).json({
+        "errorMessage" : "wrong password"
+      });
     
-    return next();
+    }
+    else{
+      let token =  jwt.sign({sub : user.id,
+        iat: Date.now(),
+        exp :Math.floor(Date.now() / 1000) + (3 * 60 *60 * 60)
+      }, "Choochooo");
+  
+      res.status(200).json({
+        token: token
+      }
+      );
+    }
+   
   }
+  
 
-  let isAuthorized = await bcrypt.compare(req.body.pwd, user.pwd);
-  if(!isAuthorized){
-    res.status(401).json({
-      "errorMessage" : "wrong password"
-    });
-    return next();
-  }
-  console.log(user);
-  let token =  jwt.sign({sub : user.id,
-    iat: Date.now(),
-    exp :Math.floor(Date.now() / 1000) + (3 * 60 *60 * 60)
-  }, "Choochooo");
-
-  res.status(200).json(
-    token
-  );
-next();
 
   
 
