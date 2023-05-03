@@ -3,7 +3,7 @@ const db = require("../util/db");
 const { User, Posting, Vote } = require("../models/main");
 const bcrypt = require('bcrypt');
 var jwt = require('jsonwebtoken');
-const { Console } = require("winston/lib/winston/transports");
+const { JWTSECTRET} = require("../util/const");
 
 
 
@@ -53,6 +53,8 @@ exports.SignUp = async (req,res,next) => {
 };
 
 exports.LogIn = async (req, res, next) =>{
+
+ 
   const user = await User.findOne(
     {
       where : {
@@ -76,7 +78,7 @@ exports.LogIn = async (req, res, next) =>{
       let token =  jwt.sign({sub : user.id,
         iat: Date.now(),
         exp :Math.floor(Date.now() / 1000) + (3 * 60 *60 * 60)
-      }, "Choochooo");
+      }, JWTSECTRET);
   
       res.status(200).json({
         token: token
@@ -91,3 +93,26 @@ exports.LogIn = async (req, res, next) =>{
   
 
 };
+exports.GetUser = async(req, res, next) =>{
+  if(req.params.userId == undefined){
+    return res.status(400).json({message: 'This userId is invalid'});
+  }
+  if(req.userId != req.params.userId){
+
+    return res.status(401).json({ message: 'You are not authorized to access this user' });
+    
+  }
+
+  const user = await User.findOne(
+    {
+      where : {
+        id : req.params.userId
+      }
+
+    }
+  );
+
+  res.status(200).json({
+    "user": user,
+  });
+}
