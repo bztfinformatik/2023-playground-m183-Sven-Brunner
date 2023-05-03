@@ -48,10 +48,12 @@ api.use((req, res, next) => {
 
 // error handler sends error message as json
 api.use((err, req, res, next) => {
-  logger.error(err.message, {
-    errno: err.errno,
-    error: err,
-  });
+  console.log(err.message);
+  
+  //logger.error(err.message, {
+  //errno: err.errno,
+  //error: err,
+  //});
   res.status(err.statusCode).json({
     errorMessage: err.message,
   });
@@ -123,10 +125,12 @@ const { sampleUsers, samplePostings, sampleVotes } = require("./util/sampledata"
       }
     }
   } catch (err) {
-    logger.error(err.message, {
-      errno: err.errno,
-      error: err,
-    });
+
+    console.log(err.message);
+    //logger.error(err.message, {
+    //  errno: err.errno,
+    //  error: err,
+    //});
   } finally {
     api.listen(3000);
   }

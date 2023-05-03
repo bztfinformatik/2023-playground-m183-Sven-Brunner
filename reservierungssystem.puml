@@ -17,32 +17,32 @@ class Sitzplatz{
 }
 
 class Sitzplatzangebot{
-    id : int 
+    * id : int 
     sitzplatzId : int 
     vorstellungsId : int 
     reservationsId : int 
 }
 class Zeitfenster {
-    id : int 
+    * id : int 
     startzeit : DateTime 
     endzeit : DateTime
 }
 
 class Film {
-    id : int 
+    * id : int 
     name : string 
     regisseur : string 
 }
 
 class Vorstellung{
-    id : int 
+    * id : int 
     zeitfensterId : int 
     saalId : int 
     filmId : int 
 }
 
 class Reservation{
-    id : int 
+    * id : int 
     name : string 
     email : string 
 }

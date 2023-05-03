@@ -11,6 +11,7 @@ router.get('/hw', miscCtrl.getHelloWorld);
 router.post('/pm', miscCtrl.postMessage);
 router.get("/", miscCtrl.default);
 
-router.post('/user', userCtrl.SignUp);
+router.post('/user/signup', userCtrl.SignUp);
+router.post('/user/login', userCtrl.LogIn);
 
 module.exports = router;
